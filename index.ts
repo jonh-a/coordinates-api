@@ -8,6 +8,7 @@ const app: Express = express();
 const port = process.env.PORT || '3000';
 
 app.locals.countries = []
+app.locals.openweathermap_api_key = process.env.OPENWEATHERMAP_API_KEY || ''
 
 app.get('/health', (req: Request, res: Response) => {
   return res.json({ status: "OK" })
