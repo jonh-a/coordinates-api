@@ -2,7 +2,7 @@ import express from 'express';
 import {
   getRandomCoordinatesInFeature,
   getCountryGeojson,
-  getReverseGeocodingForCoordinates,
+  getReverseGeocodingForCoordinatesFromOSM,
 } from '../common/coordinates';
 import {
   getWeatherDataForCoordinates,
@@ -24,9 +24,7 @@ const randomPlace = async (req: express.Request, res: express.Response) => {
     const promises = [];
 
     if (include.includes('geocoding')) {
-      promises.push(
-        getReverseGeocodingForCoordinates(coordinates, req.app.locals.openweathermap_api_key),
-      );
+      promises.push(getReverseGeocodingForCoordinatesFromOSM(coordinates));
     }
 
     if (include.includes('weather')) {

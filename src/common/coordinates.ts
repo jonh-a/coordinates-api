@@ -41,7 +41,7 @@ export const getRandomCoordinatesInFeature = async (feature: Feature) => {
   }
 };
 
-export const getReverseGeocodingForCoordinates = async (
+export const getReverseGeocodingForCoordinatesFromOWM = async (
   coordinates: number[],
   openweathermap_api_key: string,
 ) => {
@@ -50,6 +50,24 @@ export const getReverseGeocodingForCoordinates = async (
     const resp = await axios.get(url);
     if (resp.status === 200) return { type: 'geocoding', ...resp.data };
     return { type: 'geocoding', error: 'Failed to fetch reverse geocoding data.' };
+  } catch (e) {
+    console.log(e);
+    return { type: 'geocoding', error: 'An unexpected error occurred while fetching reverse geocoding data.' };
+  }
+};
+
+export const getReverseGeocodingForCoordinatesFromOSM = async (
+  coordinates: number[],
+) => {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates[0]}&lon=${coordinates[1]}&addressdetails=1`;
+  try {
+    const resp = await axios.get(url);
+    if (resp.status !== 200) return { type: 'geocoding', error: 'Failed to fetch reverse geocoding data.' };
+
+    const boundingbox = resp?.data?.boundingbox || [0, 0, 0, 0];
+    const bbox = [boundingbox[2], boundingbox[0], boundingbox[3], boundingbox[1]].join(',');
+
+    return { type: 'geocoding', ...resp.data, bbox };
   } catch (e) {
     console.log(e);
     return { type: 'geocoding', error: 'An unexpected error occurred while fetching reverse geocoding data.' };
