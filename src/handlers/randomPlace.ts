@@ -4,13 +4,17 @@ import {
   getCountryGeojson,
   getReverseGeocodingForCoordinatesFromOSM,
 } from '../common/coordinates';
-import {
-  getWeatherDataForCoordinates,
-} from '../common/weather';
+import { getWeatherDataForCoordinates } from '../common/weather';
+import { getRandomCountry } from '../common/countries';
 
 const randomPlace = async (req: express.Request, res: express.Response) => {
   try {
-    const country = req?.params?.country || '';
+    let country = req?.params?.country || '';
+
+    if (!country) {
+      const resp = await getRandomCountry(req);
+      country = resp.country.name;
+    }
 
     let include: any = req?.query?.include || [];
     if (typeof include === 'string') include = include.split(',');

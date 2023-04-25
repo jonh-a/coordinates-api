@@ -12,6 +12,7 @@ app.locals.openweathermap_api_key = process.env.OPENWEATHERMAP_API_KEY || '';
 
 app.get('/health', (req: Request, res: Response) => res.json({ status: 'OK' }));
 
+app.get('/random', randomPlace);
 app.get('/random/:country', randomPlace);
 
 app.listen(port, () => {
