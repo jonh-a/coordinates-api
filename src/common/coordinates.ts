@@ -3,7 +3,7 @@ import * as turf from '@turf/turf';
 import { Feature } from '../definitions/geojson';
 
 export const getCountryGeojson = async (country: string) => {
-  const url = `https://geojson-api.usingthe.computer/countries/${country}`;
+  const url = `https://geojson-api.usingthe.computer/countries/${country}?detail=10m`;
 
   try {
     const resp = await axios.get(url);
