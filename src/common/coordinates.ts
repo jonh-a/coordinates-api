@@ -45,6 +45,7 @@ export const getReverseGeocodingForCoordinatesFromOWM = async (
   coordinates: number[],
   openweathermap_api_key: string,
 ) => {
+  // Not currently implemented
   const url = `http://api.openweathermap.org/geo/1.0/reverse?lat=${coordinates[0]}&lon=${coordinates[1]}&appid=${openweathermap_api_key}`;
   try {
     const resp = await axios.get(url);
