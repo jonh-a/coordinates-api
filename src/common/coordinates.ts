@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios';
 import * as turf from '@turf/turf';
 import { Feature } from '../definitions/geojson';
+import { GeocodingResponse } from '../definitions/geocoding';
 
 export const getCountryGeojson = async (country: string) => {
   const url = `https://geojson-api.usingthe.computer/countries/${country}?detail=10m`;
@@ -41,20 +43,13 @@ export const getRandomCoordinatesInFeature = async (feature: Feature) => {
   }
 };
 
-export const getReverseGeocodingForCoordinatesFromOWM = async (
-  coordinates: number[],
-  openweathermap_api_key: string,
-) => {
-  // Not currently implemented
-  const url = `http://api.openweathermap.org/geo/1.0/reverse?lat=${coordinates[0]}&lon=${coordinates[1]}&appid=${openweathermap_api_key}`;
-  try {
-    const resp = await axios.get(url);
-    if (resp.status === 200) return { type: 'geocoding', ...resp.data };
-    return { type: 'geocoding', error: 'Failed to fetch reverse geocoding data.' };
-  } catch (e) {
-    console.log(e);
-    return { type: 'geocoding', error: 'An unexpected error occurred while fetching reverse geocoding data.' };
-  }
+const parseResponseFromOSM = (response: GeocodingResponse): GeocodingResponse => {
+  const {
+    address, boundingbox, display_name, lat, lon,
+  } = response;
+  return {
+    address, boundingbox, display_name, lat, lon,
+  };
 };
 
 export const getReverseGeocodingForCoordinatesFromOSM = async (
@@ -65,10 +60,17 @@ export const getReverseGeocodingForCoordinatesFromOSM = async (
     const resp = await axios.get(url);
     if (resp.status !== 200) return { type: 'geocoding', error: 'Failed to fetch reverse geocoding data.' };
 
+    let parsedResponse: GeocodingResponse;
+    try {
+      parsedResponse = parseResponseFromOSM(resp.data);
+    } catch {
+      parsedResponse = resp.data;
+    }
+
     const boundingbox = resp?.data?.boundingbox || [0, 0, 0, 0];
     const bbox = [boundingbox[2], boundingbox[0], boundingbox[3], boundingbox[1]].join(',');
 
-    return { type: 'geocoding', ...resp.data, bbox };
+    return { type: 'geocoding', ...parsedResponse, bbox };
   } catch (e) {
     console.log(e);
     return { type: 'geocoding', error: 'An unexpected error occurred while fetching reverse geocoding data.' };
