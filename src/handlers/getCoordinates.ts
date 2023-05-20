@@ -1,5 +1,5 @@
 import express from 'express';
-import { getReverseGeocodingForCoordinatesFromOSM } from '../common/coordinates';
+import { getReverseGeocodingForCoordinatesFromOSM } from '../common/geocoding';
 import { getWeatherDataForCoordinates } from '../common/weather';
 
 const getCoordinates = async (req: express.Request, res: express.Response) => {

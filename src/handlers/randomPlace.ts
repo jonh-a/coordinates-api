@@ -2,8 +2,8 @@ import express from 'express';
 import {
   getRandomCoordinatesInFeature,
   getCountryGeojson,
-  getReverseGeocodingForCoordinatesFromOSM,
 } from '../common/coordinates';
+import { getReverseGeocodingForCoordinatesFromOSM } from '../common/geocoding';
 import { getWeatherDataForCoordinates } from '../common/weather';
 import { getRandomCountry } from '../common/countries';
 
