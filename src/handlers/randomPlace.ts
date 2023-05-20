@@ -25,6 +25,8 @@ const randomPlace = async (req: express.Request, res: express.Response) => {
     if (geojson?.error) return res.json(geojson);
     const coordinates = await getRandomCoordinatesInFeature(geojson);
 
+    const units = req?.query?.units === 'metric' ? 'metric' : 'imperial';
+
     const promises = [];
 
     if (include.includes('geocoding')) {
@@ -33,7 +35,7 @@ const randomPlace = async (req: express.Request, res: express.Response) => {
 
     if (include.includes('weather')) {
       promises.push(
-        getWeatherDataForCoordinates(coordinates, req.app.locals.openweathermap_api_key),
+        getWeatherDataForCoordinates(coordinates, req.app.locals.openweathermap_api_key, units),
       );
     }
 

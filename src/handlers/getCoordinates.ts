@@ -16,6 +16,8 @@ const getCoordinates = async (req: express.Request, res: express.Response) => {
 
     const coordinates = [parseFloat(lat), parseFloat(long)];
 
+    const units = req?.query?.units === 'metric' ? 'metric' : 'imperial';
+
     const promises = [];
 
     if (include.includes('geocoding')) {
@@ -24,7 +26,7 @@ const getCoordinates = async (req: express.Request, res: express.Response) => {
 
     if (include.includes('weather')) {
       promises.push(
-        getWeatherDataForCoordinates(coordinates, req.app.locals.openweathermap_api_key),
+        getWeatherDataForCoordinates(coordinates, req.app.locals.openweathermap_api_key, units),
       );
     }
 

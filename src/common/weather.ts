@@ -1,63 +1,30 @@
 import axios from 'axios';
 import { WeatherResponse, WeatherParsed } from '../definitions/weather';
 
-const parseResponseFromOWM = (response: WeatherResponse): WeatherParsed => {
-  const cloudsDefault = { all: 0 };
-  const mainDefault = {
-    feels_like: 0, humidity: 0, pressure: 0, sea_level: 0, temp: 0, temp_max: 0, temp_min: 0,
-  };
-  const sysDefault = {
-    country: 'NA', sunrise: 0, sunset: 0,
-  };
-  const {
-    clouds = cloudsDefault,
-    dt = 0,
-    main = mainDefault,
-    name = 'NA',
-    sys = sysDefault,
-    visibility = 0,
-  } = response;
-
-  const { all: cloudsAll } = clouds;
-  const {
-    feels_like: feelsLike = 0,
-    humidity = 0,
-    pressure = 0,
-    sea_level: seaLevel = 0,
-    temp = 0,
-    temp_min: tempMin = 0,
-    temp_max: tempMax = 0,
-  } = main;
-  const {
-    country = 'NA',
-    sunrise = 0,
-    sunset = 0,
-  } = sys;
-
-  return {
-    clouds: cloudsAll,
-    dt,
-    feels_like: feelsLike,
-    humidity,
-    pressure,
-    sea_level: seaLevel,
-    temp,
-    temp_min: tempMin,
-    temp_max: tempMax,
-    name,
-    country,
-    sunrise,
-    sunset,
-    visibility,
-  };
-};
+const parseResponseFromOWM = (response: WeatherResponse): WeatherParsed => ({
+  clouds: response?.clouds?.all || 0,
+  dt: response?.dt || 0,
+  feels_like: response?.main?.feels_like || 0,
+  humidity: response?.main?.humidity || 0,
+  pressure: response?.main?.pressure || 0,
+  sea_level: response?.main?.sea_level || 0,
+  temp: response?.main?.temp || 0,
+  temp_min: response?.main?.temp_min || 0,
+  temp_max: response?.main?.temp_max || 0,
+  name: response?.name || '',
+  country: response?.sys?.country || '',
+  sunrise: response?.sys?.sunrise || 0,
+  sunset: response?.sys?.sunset || 0,
+  visibility: response?.visibility,
+});
 
 // eslint-disable-next-line import/prefer-default-export
 export const getWeatherDataForCoordinates = async (
   coordinates: number[],
   openweathermapApiKey: string,
+  units: string,
 ) => {
-  const url = `http://api.openweathermap.org/data/2.5/weather?lat=${coordinates[0]}&lon=${coordinates[1]}&appid=${openweathermapApiKey}&units=imperial`;
+  const url = `http://api.openweathermap.org/data/2.5/weather?lat=${coordinates[0]}&lon=${coordinates[1]}&appid=${openweathermapApiKey}&units=${units}`;
   try {
     const resp = await axios.get(url);
 
