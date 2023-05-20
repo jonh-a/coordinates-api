@@ -11,7 +11,7 @@ const getCoordinates = async (req: express.Request, res: express.Response) => {
     const lat: any = req?.query?.lat || [];
     if (typeof lat !== 'string' || Number.isNaN(lat)) return res.json({ error: 'Value of lat not recognized' });
 
-    const long: any = req?.query?.long || [];
+    const long: any = req?.query?.lon || [];
     if (typeof long !== 'string' || Number.isNaN(long)) return res.json({ error: 'Value of long not recognized' });
 
     const coordinates = [parseFloat(lat), parseFloat(long)];

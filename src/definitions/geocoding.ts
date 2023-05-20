@@ -3,6 +3,7 @@ export interface GeocodingResponse {
     'ISO3166-2-lvl4'?: string
     'ISO3166-2-lvl6'?: string
     country: string
+    county: string
     country_code: string
     road?: string
     state?: string

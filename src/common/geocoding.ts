@@ -3,7 +3,17 @@ import axios from 'axios';
 import { GeocodingResponse } from '../definitions/geocoding';
 
 const parseResponseFromOSM = (response: GeocodingResponse): GeocodingResponse => ({
-  address: response?.address || '',
+  address: {
+    village: response?.address?.village || '',
+    country: response?.address?.country || '',
+    county: response?.address?.county || '',
+    road: response?.address?.road || '',
+    state: response?.address?.state || '',
+    state_district: response?.address?.state_district || '',
+    country_code: response?.address?.country_code || '',
+    'ISO3166-2-lvl4': response?.address?.['ISO3166-2-lvl4'] || '',
+    'ISO3166-2-lvl6': response?.address?.['ISO3166-2-lvl6'] || '',
+  },
   boundingbox: response?.boundingbox || '',
   display_name: response?.display_name || '',
   lat: response?.lat || '',
