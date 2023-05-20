@@ -16,6 +16,18 @@ export const getCountryGeojson = async (country: string) => {
   }
 };
 
+const getCoordinatesInsideGeojson = (bbox: number[], poly: any): number[] => {
+  const lat = Math.random() * (bbox[3] - bbox[1]) + bbox[1];
+  const lng = Math.random() * (bbox[2] - bbox[0]) + bbox[0];
+
+  const point = (turf as any).point([lng, lat]);
+
+  if ((turf as any).booleanPointInPolygon(point, poly)) {
+    return [lat, lng];
+  }
+  return getCoordinatesInsideGeojson(bbox, poly);
+};
+
 export const getRandomCoordinatesInFeature = async (feature: Feature) => {
   const { bbox } = feature;
 
@@ -31,16 +43,7 @@ export const getRandomCoordinatesInFeature = async (feature: Feature) => {
 
   const poly = country?.geometry;
 
-  while (true) {
-    const lat = Math.random() * (bbox[3] - bbox[1]) + bbox[1];
-    const lng = Math.random() * (bbox[2] - bbox[0]) + bbox[0];
-
-    const point = (turf as any).point([lng, lat]);
-
-    if ((turf as any).booleanPointInPolygon(point, poly)) {
-      return [lat, lng];
-    }
-  }
+  return getCoordinatesInsideGeojson(bbox, poly);
 };
 
 const parseResponseFromOSM = (response: GeocodingResponse): GeocodingResponse => {
