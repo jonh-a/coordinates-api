@@ -18,4 +18,9 @@ describe('test app.ts', () => {
     const res = await request(app).get('/health');
     expect(res.body).toEqual({ status: 'OK' });
   });
+
+  test('test version endpoint', async () => {
+    const res = await request(app).get('/version');
+    expect(typeof res.body.version).toEqual('string');
+  });
 });
