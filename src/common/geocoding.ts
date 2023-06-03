@@ -29,12 +29,7 @@ export const getReverseGeocodingForCoordinatesFromOSM = async (
     const resp = await axios.get(url, { timeout: 5000 });
     if (resp.status !== 200) return { type: 'geocoding', error: 'Failed to fetch reverse geocoding data.' };
 
-    let parsedResponse: GeocodingResponse;
-    try {
-      parsedResponse = parseResponseFromOSM(resp.data);
-    } catch {
-      parsedResponse = resp.data;
-    }
+    const parsedResponse: GeocodingResponse = parseResponseFromOSM(resp?.data);
 
     const boundingbox = resp?.data?.boundingbox || [0, 0, 0, 0];
     const bbox = [boundingbox[2], boundingbox[0], boundingbox[3], boundingbox[1]].join(',');

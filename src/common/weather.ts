@@ -28,12 +28,7 @@ export const getWeatherDataForCoordinates = async (
   try {
     const resp = await axios.get(url);
 
-    let parsedResponse: WeatherParsed | WeatherResponse;
-    try {
-      parsedResponse = parseResponseFromOWM(resp.data);
-    } catch {
-      parsedResponse = resp.data;
-    }
+    const parsedResponse: WeatherParsed = parseResponseFromOWM(resp?.data);
 
     if (resp.status === 200) return { type: 'weather', ...parsedResponse };
     return { type: 'weather', error: 'Failed to fetch weather data.' };

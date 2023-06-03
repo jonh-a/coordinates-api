@@ -34,9 +34,7 @@ export const getRandomCoordinatesInFeature = async (feature: Feature) => {
 
   if (feature.geometry.type === 'MultiPolygon') {
     country = turf.feature(turf.multiPolygon(feature.geometry.coordinates));
-  }
-
-  if (feature.geometry.type === 'Polygon') {
+  } else if (feature.geometry.type === 'Polygon') {
     country = turf.feature(turf.polygon(feature.geometry.coordinates));
   }
 

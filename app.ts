@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import randomPlace from './src/handlers/randomPlace';
 import getCoordinates from './src/handlers/getCoordinates';
+import getCountries from './src/handlers/getCountries';
 
 dotenv.config();
 
@@ -20,5 +21,6 @@ app.get('/version', (req: Request, res: Response) => res.json({ version }));
 app.get('/random', randomPlace);
 app.get('/random/:country', randomPlace);
 app.get('/coordinates', getCoordinates);
+app.get('/countries', getCountries);
 
 export default app;
