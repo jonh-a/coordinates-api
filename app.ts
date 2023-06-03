@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import randomPlace from './src/handlers/randomPlace';
 import getCoordinates from './src/handlers/getCoordinates';
 
@@ -7,6 +8,8 @@ dotenv.config();
 
 const app: Express = express();
 const version: string = '0.0.1';
+
+app.use(cors());
 
 app.locals.countries = [];
 app.locals.openweathermap_api_key = process.env?.OPENWEATHERMAP_API_KEY || '';
