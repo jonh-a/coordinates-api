@@ -15,9 +15,13 @@ export const getCountryGeojson = async (country: string) => {
   }
 };
 
-const getCoordinatesInsideGeojson = (bbox: number[], poly: any): number[] => {
+const getCoordinatesInsideGeojson = (
+  bbox: number[],
+  poly: any,
+  name: string,
+): number[] => {
   let attempt: number = 0;
-  while (attempt < 1000) {
+  while (attempt < 10000) {
     const lat = Math.random() * (bbox[3] - bbox[1]) + bbox[1];
     const lng = Math.random() * (bbox[2] - bbox[0]) + bbox[0];
 
@@ -30,7 +34,7 @@ const getCoordinatesInsideGeojson = (bbox: number[], poly: any): number[] => {
     attempt += 1;
   }
 
-  throw new Error();
+  throw new Error(name);
 };
 
 export const getRandomCoordinatesInFeature = async (feature: Feature) => {
@@ -44,7 +48,8 @@ export const getRandomCoordinatesInFeature = async (feature: Feature) => {
     country = turf.feature(turf.polygon(feature.geometry.coordinates));
   }
 
+  const name = feature?.properties?.NAME || '';
   const poly = country?.geometry;
 
-  return getCoordinatesInsideGeojson(bbox, poly);
+  return getCoordinatesInsideGeojson(bbox, poly, name);
 };
