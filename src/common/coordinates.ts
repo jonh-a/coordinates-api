@@ -16,15 +16,21 @@ export const getCountryGeojson = async (country: string) => {
 };
 
 const getCoordinatesInsideGeojson = (bbox: number[], poly: any): number[] => {
-  const lat = Math.random() * (bbox[3] - bbox[1]) + bbox[1];
-  const lng = Math.random() * (bbox[2] - bbox[0]) + bbox[0];
+  let attempt: number = 0;
+  while (attempt < 1000) {
+    const lat = Math.random() * (bbox[3] - bbox[1]) + bbox[1];
+    const lng = Math.random() * (bbox[2] - bbox[0]) + bbox[0];
 
-  const point = (turf as any).point([lng, lat]);
+    const point = (turf as any).point([lng, lat]);
 
-  if ((turf as any).booleanPointInPolygon(point, poly)) {
-    return [lat, lng];
+    if ((turf as any).booleanPointInPolygon(point, poly)) {
+      return [lat, lng];
+    }
+
+    attempt += 1;
   }
-  return getCoordinatesInsideGeojson(bbox, poly);
+
+  throw new Error();
 };
 
 export const getRandomCoordinatesInFeature = async (feature: Feature) => {
