@@ -26,7 +26,12 @@ export const getReverseGeocodingForCoordinatesFromOSM = async (
 ) => {
   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates[0]}&lon=${coordinates[1]}&addressdetails=1`;
   try {
-    const resp = await axios.get(url, { timeout: 5000 });
+    const resp = await axios.get(url, {
+      timeout: 5000,
+      headers: {
+        Referer: 'https://coordinates-api.usingthe.computer',
+      },
+    });
     if (resp.status !== 200) return { type: 'geocoding', error: 'Failed to fetch reverse geocoding data.' };
 
     const parsedResponse: GeocodingResponse = parseResponseFromOSM(resp?.data);
