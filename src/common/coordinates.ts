@@ -1,16 +1,22 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import axios from 'axios';
 import * as turf from '@turf/turf';
+import fs from 'node:fs/promises';
 import { Feature } from '../definitions/geojson';
 
 export const getCountryGeojson = async (country: string) => {
-  const url = `https://geojson-api.usingthe.computer/countries/${country}?detail=10m`;
-
   try {
-    const resp = await axios.get(url, { timeout: 5000 });
-    return resp.data;
+    const rawGeojson = await fs.readFile('src/geojson/10m.geojson', { encoding: 'utf8' });
+    const countryGeojson = JSON.parse(rawGeojson)
+      ?.features
+      ?.find((feature: Feature) => [
+        feature?.properties?.NAME?.toLowerCase(),
+        feature?.properties?.NAME_LONG?.toLowerCase(),
+        feature?.properties?.ADM0_A3.toLowerCase(),
+      ]?.includes(country.toLowerCase()));
+
+    if (!countryGeojson) return { error: 'Country not found.' };
+    return countryGeojson;
   } catch (e: any) {
-    if (e?.response?.status === 404) return { error: 'Country not found.' };
     return { error: 'An unexpected error occurred.' };
   }
 };

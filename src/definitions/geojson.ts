@@ -12,6 +12,7 @@ export interface FeatureProperties {
   SUBREGION: string
   ISO_A3: string
   POSTAL: string
+  ADM0_A3: string
 }
 
 export interface FeaturePolygon {
