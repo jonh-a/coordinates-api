@@ -1,3 +1,10 @@
+export interface FeatureCollection {
+  type: string
+  name: string
+  features: Feature[]
+  bbox: Array<number>
+}
+
 export interface Feature {
   type: string
   properties: FeatureProperties

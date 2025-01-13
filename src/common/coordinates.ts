@@ -1,23 +1,25 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import * as turf from '@turf/turf';
 import fs from 'node:fs/promises';
-import { Feature } from '../definitions/geojson';
+import { Feature, FeatureCollection } from '../definitions/geojson';
 
 export const getCountryGeojson = async (country: string) => {
   try {
     const rawGeojson = await fs.readFile('src/geojson/10m.geojson', { encoding: 'utf8' });
-    const countryGeojson = JSON.parse(rawGeojson)
+    const geojson: FeatureCollection = JSON.parse(rawGeojson);
+    const countryGeojson = geojson
       ?.features
       ?.find((feature: Feature) => [
         feature?.properties?.NAME?.toLowerCase(),
         feature?.properties?.NAME_LONG?.toLowerCase(),
-        feature?.properties?.ADM0_A3.toLowerCase(),
+        feature?.properties?.ADM0_A3?.toLowerCase(),
       ]?.includes(country.toLowerCase()));
 
-    if (!countryGeojson) return { error: 'Country not found.' };
+    if (!countryGeojson) throw new Error('Country not found.');
     return countryGeojson;
   } catch (e: any) {
-    return { error: 'An unexpected error occurred.' };
+    console.log(e);
+    throw new Error(e);
   }
 };
 

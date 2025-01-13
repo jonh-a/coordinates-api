@@ -13,7 +13,7 @@ const randomPlace = async (req: express.Request, res: express.Response) => {
 
     if (!country) {
       const resp = await getRandomCountry(req);
-      country = resp.country.name;
+      country = resp.name_long;
     }
 
     let include: any = req?.query?.include || [];
@@ -21,8 +21,6 @@ const randomPlace = async (req: express.Request, res: express.Response) => {
     if (Array.isArray(include)) include = include.join(',').split(',');
 
     const geojson = await getCountryGeojson(country);
-
-    if (geojson?.error) return res.json(geojson);
     const coordinates = await getRandomCoordinatesInFeature(geojson);
 
     const units = req?.query?.units === 'metric' ? 'metric' : 'imperial';
